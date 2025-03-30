@@ -26,11 +26,17 @@ class Listener:
 
     def execute_remotely(self, command):
         self.reliable_send(command)
-        return self.reliable_receive()
+
+        if command[0] == "exit":
+            self.connection.close()
+            exit()
+
+            return self.reliable_receive()
 
     def run(self):
         while True:
             command = raw_input(">> ")
+            command = command.split(" ")
             result = self.execute_remotely(command)
             print(result)
 
