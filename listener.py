@@ -62,5 +62,5 @@ class Listener:
                 result = "[-] Error executing command"
             print(result)
 
-my_listener = Listener("xx.x.x.xx", 4444)
+my_listener = Listener("0.0.0.0", 4444)
 my_listener.run()
